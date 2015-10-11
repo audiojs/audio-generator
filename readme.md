@@ -1,31 +1,18 @@
-Generate PCM audio stream with function.
+[![npm install audio-generator](https://nodei.co/npm/audio-generator.png?mini=true)](https://npmjs.org/package/audio-generator/)
 
-[`npm install audio-generator`](https://npmjs.org/package/audio-generator)
 
 ```js
 var Generator = require('audio-generator');
 var Speaker = require('node-speaker');
 
-Generator(function (time) {
-	return Math.sin(Math.PI * 2 * time * 440);
-})
-.on('generror', function (e) {
-	//error happened during generation the frame.
-});
-.pipe(Speaker());
-```
-
-## Options
-
-```js
-var generator = new Generator({
+Generator({
 	//Generator function, returns sample values -1..1 for channels
 	generate: function (time) {
-		return [Math.random(), Math.random()]
+		return [Math.sin(Math.PI * 2 * time * 439), Math.sin(Math.PI * 2 * time * 441)];
 	},
 
-	//Duration of the generated audio, in seconds. Default is Infinity.
-	duration: 2,
+	//Duration of generated stream, in seconds
+	duration: Infinity,
 
 	//PCM output format settings
 	channels: 2,
@@ -36,12 +23,15 @@ var generator = new Generator({
 	float: false,
 	samplesPerFrame: 64,
 	interleaved: true
+})
+.on('generror', function (e) {
+	//error happened during generation the frame
 });
+.pipe(Speaker());
 ```
 
-## Related
-
-* [pcm-format](http://npmjs.org/package/pcm-format) — transform output pcm-stream to desired format.
-* [audio-speaker](http://npmjs.org/package/audio-speaker) — output pcm stream to speaker in browser and node.
-* [node-speaker](http://npmjs.org/package/speaker), [alsa](http://npmjs.org/package/alsa) — output pcm stream to speaker in node.
-* [baudio](http://npmjs.org/package/baudio), [webaudio](http://npmjs.org/package/webaudio) — alternative audio generators based on function.
+> **Related**<br/>
+> [audio-pcm-format](http://npmjs.org/package/audio-pcm-format) — transform output pcm-stream to desired format.
+> [audio-speaker](http://npmjs.org/package/audio-speaker) — output pcm stream to speaker in browser and node.
+> [node-speaker](http://npmjs.org/package/speaker), [alsa](http://npmjs.org/package/alsa) — output pcm stream to speaker in node.
+> [baudio](http://npmjs.org/package/baudio), [webaudio](http://npmjs.org/package/webaudio) — alternative audio generators based on function.

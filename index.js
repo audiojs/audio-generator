@@ -6,6 +6,9 @@ var Readable = require('stream').Readable;
 var extend = require('xtend/mutable');
 var inherits = require('inherits');
 var os = require('os');
+var convertSample = require('audio-pcm-format/sample');
+var methodSuffix = require('audio-pcm-format/method');
+
 
 /**
  * @class Generator
@@ -25,7 +28,6 @@ function Generator (opts) {
 		extend(self, opts);
 	}
 
-
 	//current sample number
 	self.count = 0;
 }
@@ -42,7 +44,7 @@ Generator.prototype.generateFrame = function () {
 	var values, value, offset;
 
 	var sampleSize = self.bitDepth / 8;
-	var methName = 'write' + (self.float ? 'Float' : ((self.signed ? '' : 'U') + 'Int' + self.bitDepth)) + self.byteOrder;
+	var methName = 'write' + methodSuffix(self);
 
 	var chunk = new Buffer(self.samplesPerFrame * sampleSize * self.channels);
 	chunk.fill(0);
@@ -54,7 +56,7 @@ Generator.prototype.generateFrame = function () {
 				values = [values];
 			}
 			for (var channel = 0; channel < self.channels; channel++) {
-				value = Math.floor(values[channel] || 0);
+				value = convertSample(values[channel] || 0, {float: true}, self);
 				offset = self.interleaved ? channel + i * self.channels : channel * self.samplesPerFrame + i;
 				chunk[methName](value, offset * sampleSize);
 			}
@@ -62,7 +64,6 @@ Generator.prototype.generateFrame = function () {
 	} catch (e) {
 		//NOTE: 'error' event blocks the stream
 		self.emit('generror', e);
-		console.log(e)
 	}
 
 	self.count += self.samplesPerFrame;
@@ -81,7 +82,8 @@ Generator.prototype._read = function (size) {
 	var self = this;
 
 	//send the chunk till possible
-	self.push(self.generateFrame());
+	var chunk = self.generateFrame();
+	self.push(chunk);
 
 	// after generating "duration" second of audio, emit "end"
 	if (self.count >= self.sampleRate * self.duration) {
