@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/audio-lab/generator",
   "devDependencies": {
+    "mocha": "^2.3.3",
     "speaker": "git://github.com/RTK/node-speaker"
   },
   "dependencies": {
