@@ -4,7 +4,7 @@
   "description": "Generate PCM stream based on generator function",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

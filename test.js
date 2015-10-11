@@ -37,39 +37,49 @@ describe('Output format', function () {
 	it('Float', function (done) {
 		var generator = Generator({
 			generate: function (time) {
-				return Math.random();
+				if (!time) return 1;
+				else return -0.5;
 			},
-			duration: .1,
-			float: true
-		}).on('end', done);
+			duration: .001,
+			float: true,
+			channels: 1
+		});
 
 		generator.on('data', function (chunk) {
 			var val1 = chunk.readFloatLE(0);
-			assert(val1 < 1);
-			assert(val1 > -1);
-
 			var val2 = chunk.readFloatLE(4);
-			assert(val2 < 1);
-			assert(val2 > -1);
+
+			try {
+				assert.equal(val1, 1);
+				assert.equal(val2, -0.5);
+				done();
+			} catch (e) {
+				done(e);
+			}
 		});
 	});
 
 	it('Int', function (done) {
 		var generator = Generator({
 			generate: function (time) {
-				return Math.random();
+				if (!time) return 1;
+				else return -0.5;
 			},
-			duration: .1
-		}).on('end', done);
+			duration: .001,
+			channels: 1
+		});
 
 		generator.on('data', function (chunk) {
 			var val1 = chunk.readInt16LE(0);
-			assert(val1 < 37768);
-			assert(val1 > -37768);
-
 			var val2 = chunk.readInt16LE(4);
-			assert(val2 < 37768);
-			assert(val2 > -37768);
+
+			try {
+				assert.equal(val1, 32767);
+				assert.equal(val2, -16384);
+				done();
+			} catch (e) {
+				done(e);
+			}
 		});
 	});
 });

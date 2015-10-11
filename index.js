@@ -28,6 +28,11 @@ function Generator (opts) {
 		extend(self, opts);
 	}
 
+	if (self.float) {
+		self.bitDepth = 32;
+		self.signed = true;
+	}
+
 	//current sample number
 	self.count = 0;
 }
