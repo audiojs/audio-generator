@@ -1,6 +1,6 @@
 {
   "name": "audio-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate PCM stream based on generator function",
   "main": "index.js",
   "scripts": {
