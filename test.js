@@ -5,8 +5,6 @@ var assert = require('assert');
 
 
 describe('Sounds', function () {
-	var speaker = Speaker();
-
 	it('Panned wave', function (done) {
 		var generator = Generator({
 			generate: function (time) {
@@ -28,6 +26,23 @@ describe('Sounds', function () {
 			duration: .5
 		}).on('end', done);
 
+		var speaker = Speaker();
+
+		generator.pipe(speaker);
+	});
+
+	it('Sin noise', function (done) {
+		var generator = Generator({
+			generate: function (time) {
+				var noise = Math.random() * 2 - 1;
+				var f = 400;
+				return Math.sin(Math.PI * 2 * time * f) * 0.5 + noise * 0.5;
+			},
+			duration: .5
+		}).on('end', done);
+
+		var speaker = Speaker();
+
 		generator.pipe(speaker);
 	});
 });
@@ -37,8 +52,8 @@ describe('Output format', function () {
 	it('Float', function (done) {
 		var generator = Generator({
 			generate: function (time) {
-				if (!time) return 1;
-				else return -0.5;
+				var value = !time ? 1 : -0.5;
+				return value;
 			},
 			duration: .001,
 			float: true,
@@ -62,8 +77,8 @@ describe('Output format', function () {
 	it('Int', function (done) {
 		var generator = Generator({
 			generate: function (time) {
-				if (!time) return 1;
-				else return -0.5;
+				var value = !time ? 1 : -0.5;
+				return value;
 			},
 			duration: .001,
 			channels: 1

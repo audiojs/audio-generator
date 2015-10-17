@@ -5,9 +5,7 @@
 var Readable = require('stream').Readable;
 var extend = require('xtend/mutable');
 var inherits = require('inherits');
-var os = require('os');
-var convertSample = require('audio-pcm-format/sample');
-var methodSuffix = require('audio-pcm-format/method');
+var util = require('pcm-util');
 
 
 /**
@@ -28,10 +26,7 @@ function Generator (opts) {
 		extend(self, opts);
 	}
 
-	if (self.float) {
-		self.bitDepth = 32;
-		self.signed = true;
-	}
+	util.normalizeFormat(self);
 
 	//current sample number
 	self.count = 0;
@@ -41,18 +36,20 @@ inherits(Generator, Readable);
 
 
 
-/** Generate a new frame */
+/**
+ * Generate a new frame.
+ * Can be redefined, returning [[LLL...], [RRR....], ...] data array
+ * where L, R ∈ [0..1]
+ */
 Generator.prototype.generateFrame = function () {
 	var self = this;
 
 	var t = self.count / self.sampleRate;
-	var values, value, offset;
+	var values, value, offset, data = [];
 
-	var sampleSize = self.bitDepth / 8;
-	var methName = 'write' + methodSuffix(self);
-
-	var chunk = new Buffer(self.samplesPerFrame * sampleSize * self.channels);
-	chunk.fill(0);
+	for (var channel = 0; channel < self.channels; channel++ ) {
+		data[channel] = [];
+	}
 
 	try {
 		for (var i = 0; i < self.samplesPerFrame; i++) {
@@ -61,9 +58,7 @@ Generator.prototype.generateFrame = function () {
 				values = [values];
 			}
 			for (var channel = 0; channel < self.channels; channel++) {
-				value = convertSample(values[channel] || 0, {float: true}, self);
-				offset = self.interleaved ? channel + i * self.channels : channel * self.samplesPerFrame + i;
-				chunk[methName](value, offset * sampleSize);
+				data[channel].push(values[channel] || 0);
 			}
 		}
 	} catch (e) {
@@ -71,9 +66,20 @@ Generator.prototype.generateFrame = function () {
 		self.emit('generror', e);
 	}
 
-	self.count += self.samplesPerFrame;
+	return data;
+}
 
-	return chunk;
+
+/**
+ * Generate sample value for a time.
+ * Override this method in instances.
+ * Return [L, R, ...] tuple.
+ *
+ * @param {number} time current time
+ * @return {number} [-1..1]
+ */
+Generator.prototype.generate = function (time) {
+	return Math.random();
 }
 
 
@@ -86,9 +92,23 @@ Generator.prototype.generateFrame = function () {
 Generator.prototype._read = function (size) {
 	var self = this;
 
-	//send the chunk till possible
-	var chunk = self.generateFrame();
-	self.push(chunk);
+	//generate frame data
+	var data = self.generateFrame();
+
+	//write generated data to buffer
+	var buffer = new Buffer(self.samplesPerFrame * self.sampleSize * self.channels);
+
+	for (var channel = 0; channel < self.channels; channel++) {
+		util.copyToChannel(buffer, data[channel].map(function (value) {
+			return util.convertSample(value, {float: true}, self);
+		}), channel, self);
+	}
+
+	//increase generated data counter
+	self.count += self.samplesPerFrame;
+
+	//send data
+	self.push(buffer);
 
 	// after generating "duration" second of audio, emit "end"
 	if (self.count >= self.sampleRate * self.duration) {
@@ -97,28 +117,13 @@ Generator.prototype._read = function (size) {
 }
 
 
-/**
- * Generate sample value for a time.
- * Override this method in instances.
- *
- * @param {number} time current time
- * @return {number} [-1..1]
- */
-Generator.prototype.generate = function (time) {
-	return Math.random();
-}
-
 /** Duration of generated stream, in seconds */
 Generator.prototype.duration = Infinity;
 
+
 /** PCM format */
-Generator.prototype.channels = 2;
-Generator.prototype.sampleRate = 44100;
+extend(Generator.prototype, util.defaultFormat);
 Generator.prototype.samplesPerFrame = 64;
-Generator.prototype.bitDepth = 16;
-Generator.prototype.signed = true;
-Generator.prototype.float = false;
-Generator.prototype.byteOrder = 'function' == os.endianness ? os.endianness() : 'LE';
-Generator.prototype.interleaved = true;
+
 
 module.exports = Generator;
