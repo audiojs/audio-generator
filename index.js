@@ -6,6 +6,7 @@ var Readable = require('stream').Readable;
 var extend = require('xtend/mutable');
 var inherits = require('inherits');
 var util = require('pcm-util');
+var fnbody = require('fnbody');
 
 
 /**
@@ -78,9 +79,39 @@ Generator.prototype.generateFrame = function () {
  * @param {number} time current time
  * @return {number} [-1..1]
  */
-Generator.prototype.generate = function (time) {
-	return Math.random();
-}
+Generator.prototype.generate = function (time) {return Math.random();};
+
+
+/**
+ * Set new generator function
+ *
+ * @param {Function} fn New generator function
+ */
+Generator.prototype.setFunction = function (fn) {
+	var self = this;
+
+	try {
+		if (typeof fn === 'string') {
+			fn = new Function ('time', fn);
+		}
+		self.generate = fn;
+	} catch (e) {
+		self.emit('generror', e);
+	}
+
+	return self;
+};
+
+
+
+/**
+ * Serialize stream settings
+ */
+Generator.prototype.toJSON = function () {
+	return {
+		generate: fnbody(this.generate)
+	};
+};
 
 
 /**
@@ -123,7 +154,6 @@ Generator.prototype.duration = Infinity;
 
 /** PCM format */
 extend(Generator.prototype, util.defaultFormat);
-Generator.prototype.samplesPerFrame = 64;
 
 
 module.exports = Generator;

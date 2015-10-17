@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset="utf-8"/>
+
+<title>Audio-generator element test</title>
+
+<script src="./bundle.js"></script>
+<link rel="import" href="."/>
+<link rel="import" href="./node_modules/audio-speaker"/>
+<link rel="import" href="./node_modules/audio-gain"/>
+
+<audio-generator connect="audio-gain"></audio-generator>
+<audio-gain volume="0.1" connect="audio-speaker"></audio-gain>
+<audio-speaker></audio-speaker>

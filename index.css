@@ -1,0 +1,16 @@
+@import './node_modules/codemirror/lib/codemirror.css';
+
+audio-generator {
+	display: block;
+	tab-size: 4;
+	margin: 0;
+	padding: 0;
+	font-family: monospace;
+}
+audio-generator .CodeMirror {
+	height: auto;
+}
+.audio-generator-error {
+	display: block;
+	color: rgb(255,140,120);
+}

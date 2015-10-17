@@ -5,7 +5,7 @@
 var Generator = require('audio-generator');
 var Speaker = require('node-speaker');
 
-Generator({
+var generator = Generator({
 	//Generator function, returns sample values -1..1 for channels
 	generate: function (time) {
 		return [Math.sin(Math.PI * 2 * time * 439), Math.sin(Math.PI * 2 * time * 441)];
@@ -23,12 +23,22 @@ Generator({
 	float: false,
 	samplesPerFrame: 64,
 	interleaved: true
-})
-.on('generror', function (e) {
+});
+
+generator.on('generror', function (e) {
 	//error happened during generation the frame
 });
 .pipe(Speaker());
+
+
+//change generator function after 1s
+setTimeout(function () {
+	generator.setFunction(function () {
+		return [Math.random(), Math.random()];
+	});
+}, 1000);
 ```
+
 
 > **Related**<br/>
 > [audio-pcm-format](http://npmjs.org/package/audio-pcm-format) — transform output pcm-stream to desired format.<br/>
