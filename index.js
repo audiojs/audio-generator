@@ -31,10 +31,18 @@ function Generator (opts) {
 
 	//current sample number
 	self.count = 0;
-}
+};
+
 
 inherits(Generator, Readable);
 
+
+/** Duration of generated stream, in seconds */
+Generator.prototype.duration = Infinity;
+
+
+/** PCM format */
+extend(Generator.prototype, util.defaultFormat);
 
 
 /**
@@ -42,10 +50,9 @@ inherits(Generator, Readable);
  * Can be redefined, returning [[LLL...], [RRR....], ...] data array
  * where L, R ∈ [0..1]
  */
-Generator.prototype.generateFrame = function () {
+Generator.prototype.generateFrame = function (t, n) {
 	var self = this;
 
-	var t = self.count / self.sampleRate;
 	var values, value, offset, data = [];
 
 	for (var channel = 0; channel < self.channels; channel++ ) {
@@ -54,7 +61,7 @@ Generator.prototype.generateFrame = function () {
 
 	try {
 		for (var i = 0; i < self.samplesPerFrame; i++) {
-			values = self.generate(t + i / self.sampleRate);
+			values = self.generate(t + i / self.sampleRate, i);
 			if (!Array.isArray(values)) {
 				values = [values];
 			}
@@ -68,49 +75,6 @@ Generator.prototype.generateFrame = function () {
 	}
 
 	return data;
-}
-
-
-/**
- * Generate sample value for a time.
- * Override this method in instances.
- * Return [L, R, ...] tuple.
- *
- * @param {number} time current time
- * @return {number} [-1..1]
- */
-Generator.prototype.generate = function (time) {return Math.random();};
-
-
-/**
- * Set new generator function
- *
- * @param {Function} fn New generator function
- */
-Generator.prototype.setFunction = function (fn) {
-	var self = this;
-
-	try {
-		if (typeof fn === 'string') {
-			fn = new Function ('time', fn);
-		}
-		self.generate = fn;
-	} catch (e) {
-		self.emit('generror', e);
-	}
-
-	return self;
-};
-
-
-
-/**
- * Serialize stream settings
- */
-Generator.prototype.toJSON = function () {
-	return {
-		generate: fnbody(this.generate)
-	};
 };
 
 
@@ -123,8 +87,10 @@ Generator.prototype.toJSON = function () {
 Generator.prototype._read = function (size) {
 	var self = this;
 
+	var t = self.count / self.sampleRate;
+
 	//generate frame data
-	var data = self.generateFrame();
+	var data = self.generateFrame(t, self.count);
 
 	//write generated data to buffer
 	var buffer = new Buffer(self.samplesPerFrame * self.sampleSize * self.channels);
@@ -145,15 +111,49 @@ Generator.prototype._read = function (size) {
 	if (self.count >= self.sampleRate * self.duration) {
 		self.push(null);
 	}
-}
+};
 
 
-/** Duration of generated stream, in seconds */
-Generator.prototype.duration = Infinity;
+/**
+ * Generate sample value for a time.
+ * Override this method in instances.
+ * Return [L, R, ...] tuple.
+ *
+ * @param {number} time current time
+ * @return {number} [-1..1]
+ */
+Generator.prototype.generate = function (time, n) {return Math.random();};
 
 
-/** PCM format */
-extend(Generator.prototype, util.defaultFormat);
+/**
+ * Set new generator function
+ *
+ * @param {Function} fn New generator function
+ */
+Generator.prototype.setFunction = function (fn) {
+	var self = this;
+
+	try {
+		if (typeof fn === 'string') {
+			fn = new Function ('time', 'n', fn);
+		}
+		self.generate = fn;
+	} catch (e) {
+		self.emit('generror', e);
+	}
+
+	return self;
+};
+
+
+/**
+ * Serialize stream settings
+ */
+Generator.prototype.toJSON = function () {
+	return {
+		generate: fnbody(this.generate)
+	};
+};
 
 
 module.exports = Generator;

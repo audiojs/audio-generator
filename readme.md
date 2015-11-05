@@ -1,3 +1,7 @@
+Generate audio stream with a function.
+
+## Usage
+
 [![npm install audio-generator](https://nodei.co/npm/audio-generator.png?mini=true)](https://npmjs.org/package/audio-generator/)
 
 
@@ -7,7 +11,7 @@ var Speaker = require('node-speaker');
 
 var generator = Generator({
 	//Generator function, returns sample values -1..1 for channels
-	generate: function (time) {
+	generate: function (time, n) {
 		return [Math.sin(Math.PI * 2 * time * 439), Math.sin(Math.PI * 2 * time * 441)];
 	},
 
@@ -27,20 +31,19 @@ var generator = Generator({
 
 generator.on('generror', function (e) {
 	//error happened during generation the frame
-});
+})
 .pipe(Speaker());
 
 
-//change generator function after 1s
-setTimeout(function () {
-	generator.setFunction(function () {
-		return [Math.random(), Math.random()];
-	});
-}, 1000);
+//change generator function
+generator.setFunction(function (time, n) {
+	return [Math.random(), Math.random()];
+});
 ```
 
+## Related
 
-> **Related**<br/>
+> [audio-processor](http://npmjs.org/package/audio-processor) — perform processing of an audio data with a function.<br/>
 > [audio-pcm-format](http://npmjs.org/package/audio-pcm-format) — transform output pcm-stream to desired format.<br/>
 > [audio-speaker](http://npmjs.org/package/audio-speaker) — output pcm stream to speaker in browser and node.<br/>
 > [node-speaker](http://npmjs.org/package/speaker), [alsa](http://npmjs.org/package/alsa) — output pcm stream to speaker in node.<br/>
