@@ -64,22 +64,6 @@ test('Pulse', function (done) {
 	setTimeout(done, 1000)
 });
 
-test('Errors in processing, throw errors', function (done) {
-	Generator(function (time) {
-		if (time > 0.0001) {
-			this.error(123);
-		}
-		if (time > 0.0002) {
-			return null;
-		}
-	})
-	.on('error', function (e) {
-		console.error(e)
-	})
-	.on('end', done)
-	.pipe(Sink());
-});
-
 test('setFunction', function (done) {
 	Generator(function (time) {
 		if (time > 0.1) {
@@ -94,4 +78,20 @@ test('setFunction', function (done) {
 	.pipe(Speaker());
 
 	setTimeout(done, 300);
+});
+
+test('Errors in processing, throw errors', function (done) {
+	Generator(function (time) {
+		if (time > 0.0001) {
+			this.error(123);
+		}
+		if (time > 0.0002) {
+			return null;
+		}
+	})
+	.on('error', function (e) {
+		console.error(e)
+	})
+	.on('end', done)
+	.pipe(Sink());
 });

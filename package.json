@@ -10,7 +10,7 @@
   "style": "index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/audio-lab/generator"
+    "url": "https://github.com/audio-lab/audio-generator"
   },
   "keywords": [
     "audio",
@@ -22,9 +22,9 @@
   "author": "Deema Yvanow <dfcreative@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/audio-lab/generator/issues"
+    "url": "https://github.com/audio-lab/audio-generator/issues"
   },
-  "homepage": "https://github.com/audio-lab/generator",
+  "homepage": "https://github.com/audio-lab/audio-generator",
   "devDependencies": {
     "audio-gain": "^1.0.1",
     "audio-sink": "^1.0.2",
