@@ -58,6 +58,10 @@ Generator.prototype.process = function (chunk) {
 
 		if (moment > self.duration) return null;
 
+		if (self.period !== Infinity) {
+			moment %= self.period;
+		}
+
 		var gen = self.generate(moment);
 
 		if (!Array.isArray(gen)) {

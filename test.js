@@ -46,10 +46,12 @@ describe('Sounds', function () {
 		generator.pipe(speaker);
 	});
 
-	it.skip('Saw', function (done) {
+	it.only('Saw', function (done) {
 		Generator(function (time, n) {
-
-		}, { period: 1/100, duration: .5 }).pipe(Speaker());
+			return time*100;
+		}, { period: 1/100, duration: .5 })
+		.on('end', done)
+		.pipe(Speaker())
 	});
 });
 
