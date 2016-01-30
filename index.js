@@ -2,114 +2,71 @@
  * @module  audio-generator
  */
 
-var Readable = require('stream').Readable;
-var extend = require('xtend/mutable');
 var inherits = require('inherits');
-var util = require('pcm-util');
 var fnbody = require('fnbody');
+var AudioThrough = require('audio-through');
+var extend = require('xtend/mutable');
+var util = require('audio-buffer-utils');
 
 
 /**
  * @class Generator
  */
-function Generator (opts) {
-	if (!(this instanceof Generator)) return new Generator(opts);
-
-	Readable.call(this);
+function Generator (fn, opts) {
+	if (!(this instanceof Generator)) return new Generator(fn, opts);
 
 	var self = this;
 
-	if (typeof opts === 'function') {
-		self.generate = opts;
+	//set generator function
+	if (typeof fn === 'function') {
+		opts.generate = fn;
 	}
-	//take over options
 	else {
-		extend(self, opts);
+		opts = fn;
 	}
 
-	util.normalizeFormat(self);
-
-	//current sample number
-	self.count = 0;
+	//create through-instance
+	AudioThrough.call(this, opts);
 };
 
 
-inherits(Generator, Readable);
+inherits(Generator, AudioThrough);
 
 
 /** Duration of generated stream, in seconds */
 Generator.prototype.duration = Infinity;
 
 
-/** PCM format */
-extend(Generator.prototype, util.defaultFormat);
+/** Period to wrap time */
+Generator.prototype.period = Infinity;
 
 
 /**
- * Generate a new frame.
- * Can be redefined, returning [[LLL...], [RRR....], ...] data array
- * where L, R ∈ [0..1]
+ * The way we define through processor
  */
-Generator.prototype.generateFrame = function (t, n) {
+Generator.prototype.process = function (chunk) {
 	var self = this;
 
-	var values, value, offset, data = [];
+	var time = self.time, count = self.count;
 
-	for (var channel = 0; channel < self.channels; channel++ ) {
-		data[channel] = [];
-	}
+	//we don’t need to return new chunk, we just modify channels data
+	var data = util.data(chunk);
 
-	try {
-		for (var i = 0; i < self.samplesPerFrame; i++) {
-			values = self.generate(t + i / self.sampleRate, i);
-			if (!Array.isArray(values)) {
-				values = [values];
-			}
-			for (var channel = 0; channel < self.channels; channel++) {
-				data[channel].push(values[channel] || 0);
-			}
+	//generate [channeled] samples
+	for (var i = 0; i < chunk.length; i++) {
+		var moment = time + i / self.sampleRate;
+
+		if (moment > self.duration) return null;
+
+		var gen = self.generate(moment);
+
+		if (!Array.isArray(gen)) {
+			gen = [gen];
 		}
-	} catch (e) {
-		//NOTE: 'error' event blocks the stream
-		self.emit('generror', e);
-	}
 
-	return data;
-};
-
-
-/**
- * Read is called each time the consumer is ready to eat some more generated data.
- * So feed it till consumer is full.
- *
- * @param {Number} size Number of bytes to generate
- */
-Generator.prototype._read = function (size) {
-	var self = this;
-
-	var t = self.count / self.sampleRate;
-
-	//generate frame data
-	var data = self.generateFrame(t, self.count);
-
-	//write generated data to buffer
-	var buffer = new Buffer(self.samplesPerFrame * self.sampleSize * self.channels);
-
-	for (var channel = 0; channel < self.channels; channel++) {
-		util.copyToChannel(buffer, data[channel].map(function (value) {
-			return util.convertSample(value, {float: true}, self);
-		}), channel, self);
-	}
-
-	//increase generated data counter
-	self.count += self.samplesPerFrame;
-
-	//send data
-	self.push(buffer);
-
-	// after generating "duration" second of audio, emit "end"
-	if (self.count >= self.sampleRate * self.duration) {
-		self.push(null);
+		for (var channel = 0; channel < chunk.numberOfChannels; channel++) {
+			data[channel][i] = (gen[channel] == null ? gen[0] : gen[channel]) || 0;
+		}
 	}
 };
 
@@ -122,7 +79,7 @@ Generator.prototype._read = function (size) {
  * @param {number} time current time
  * @return {number} [-1..1]
  */
-Generator.prototype.generate = function (time, n) {return Math.random();};
+Generator.prototype.generate = function (time) {return Math.random();};
 
 
 /**
@@ -133,14 +90,15 @@ Generator.prototype.generate = function (time, n) {return Math.random();};
 Generator.prototype.setFunction = function (fn) {
 	var self = this;
 
-	try {
-		if (typeof fn === 'string') {
-			fn = new Function ('time', 'n', fn);
+	if (typeof fn === 'string') {
+		try {
+			fn = new Function ('time', fn);
+		} catch (e) {
+			self.error(e);
 		}
-		self.generate = fn;
-	} catch (e) {
-		self.emit('generror', e);
 	}
+
+	self._generate = fn;
 
 	return self;
 };

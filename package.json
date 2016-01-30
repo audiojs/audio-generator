@@ -1,7 +1,7 @@
 {
   "name": "audio-generator",
   "version": "1.1.0",
-  "description": "Generate PCM stream based on generator function",
+  "description": "Generate audio stream based on function",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
@@ -29,16 +29,15 @@
     "audio-gain": "^1.0.1",
     "audio-speaker": "^1.1.2",
     "mocha": "^2.3.3",
-    "speaker": "git://github.com/RTK/node-speaker",
-    "watchify": "^3.4.0"
+    "speaker": "audio-lab/node-speaker"
   },
   "dependencies": {
+    "audio-buffer-utils": "^2.0.0",
     "audio-element": "^1.0.1",
-    "audio-pcm-format": "^1.0.0",
+    "audio-through": "^1.0.6",
     "codemirror": "^5.7.0",
-    "fnbody": "0.0.2",
+    "fnbody": "latest",
     "inherits": "^2.0.1",
-    "pcm-util": "^1.1.2",
     "stacktrace-parser": "^0.1.3",
     "xtend": "^4.0.0"
   }

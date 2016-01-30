@@ -7,38 +7,30 @@ Generate audio stream with a function.
 
 ```js
 var Generator = require('audio-generator');
-var Speaker = require('node-speaker');
+var Speaker = require('audio-speaker');
 
-var generator = Generator({
+Generator(
 	//Generator function, returns sample values -1..1 for channels
-	generate: function (time, n) {
-		return [Math.sin(Math.PI * 2 * time * 439), Math.sin(Math.PI * 2 * time * 441)];
+	function (chunk) {
+		var time = index / this.sampleRate;
+
+		return Math.sin(Math.PI * 2 * time * 439);
 	},
 
-	//Duration of generated stream, in seconds
-	duration: Infinity,
+	{
+		//Duration of generated stream, in seconds
+		duration: Infinity,
 
-	//PCM output format settings
-	channels: 2,
-	sampleRate: 44100,
-	byteOrder: 'LE',
-	bitDepth: 16,
-	signed: true,
-	float: false,
-	samplesPerFrame: 64,
-	interleaved: true
-});
-
-generator.on('generror', function (e) {
+		//Periodicity of the time
+		period: Infinity
+})
+.on('error', function (e) {
 	//error happened during generation the frame
 })
-.pipe(Speaker());
-
-
-//change generator function
-generator.setFunction(function (time, n) {
+.setFunction(function (time, n) {
 	return [Math.random(), Math.random()];
-});
+})
+.pipe(Speaker());
 ```
 
 ## Related

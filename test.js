@@ -1,21 +1,21 @@
 var Generator = require('./');
 var Speaker = require('speaker');
-var PCMFormat = require('audio-pcm-format');
 var assert = require('assert');
+var util = require('audio-buffer-utils');
 
 
 describe('Sounds', function () {
 	it('Panned wave', function (done) {
-		var generator = Generator({
-			generate: function (time) {
+		var generator = Generator(
+			function (time) {
 				return [Math.sin(Math.PI * 2 * time * 439), Math.sin(Math.PI * 2 * time * 441)];
 			},
-			duration: .5
-		}).on('end', done);
+			{
+				duration: .5
+			}
+		).on('end', done);
 
-		var speaker = Speaker();
-
-		generator.pipe(speaker);
+		generator.pipe(Speaker());
 	});
 
 	it('Left channel noise', function (done) {
@@ -45,56 +45,21 @@ describe('Sounds', function () {
 
 		generator.pipe(speaker);
 	});
+
+	it.skip('Saw', function (done) {
+		Generator(function (time, n) {
+
+		}, { period: 1/100, duration: .5 }).pipe(Speaker());
+	});
 });
 
 
-describe('Output format', function () {
-	it('Float', function (done) {
-		var generator = Generator({
-			generate: function (time) {
-				var value = !time ? 1 : -0.5;
-				return value;
-			},
-			duration: .001,
-			float: true,
-			channels: 1
-		});
+describe('Other', function () {
+	it('Errors in processing, throw errors', function () {
 
-		generator.on('data', function (chunk) {
-			var val1 = chunk.readFloatLE(0);
-			var val2 = chunk.readFloatLE(4);
-
-			try {
-				assert.equal(val1, 1);
-				assert.equal(val2, -0.5);
-				done();
-			} catch (e) {
-				done(e);
-			}
-		});
 	});
 
-	it('Int', function (done) {
-		var generator = Generator({
-			generate: function (time) {
-				var value = !time ? 1 : -0.5;
-				return value;
-			},
-			duration: .001,
-			channels: 1
-		});
+	it('End generation', function () {
 
-		generator.on('data', function (chunk) {
-			var val1 = chunk.readInt16LE(0);
-			var val2 = chunk.readInt16LE(4);
-
-			try {
-				assert.equal(val1, 32767);
-				assert.equal(val2, -16384);
-				done();
-			} catch (e) {
-				done(e);
-			}
-		});
 	});
 });

@@ -1,3 +1,4 @@
+* Replace generate with chunk generation; avoid size param, define it from the chunk generated.
+* Find explicit way to throw errors
 * GUI
 * CLI
-* Use audio-slice for duration (get rid of duration param - it is not the generator’s task)
