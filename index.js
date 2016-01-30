@@ -122,7 +122,7 @@ Generator.prototype.setFunction = function (fn) {
 		}
 	}
 
-	self._generate = fn;
+	self.generate = fn;
 
 	return self;
 };

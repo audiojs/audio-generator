@@ -79,3 +79,19 @@ test('Errors in processing, throw errors', function (done) {
 	.on('end', done)
 	.pipe(Sink());
 });
+
+test('setFunction', function (done) {
+	Generator(function (time) {
+		if (time > 0.1) {
+			this.period = 1/440;
+			this.setFunction(function (time) {
+				return time > this.period / 2 ? 1 : -1;
+			});
+		}
+
+		return Math.sin(Math.PI * 2 * time * 440);
+	})
+	.pipe(Speaker());
+
+	setTimeout(done, 300);
+});

@@ -39,8 +39,6 @@ Generator(
 
 ## Related
 
-> [audio-processor](http://npmjs.org/package/audio-processor) — perform processing of an audio data with a function.<br/>
-> [audio-pcm-format](http://npmjs.org/package/audio-pcm-format) — transform output pcm-stream to desired format.<br/>
-> [audio-speaker](http://npmjs.org/package/audio-speaker) — output pcm stream to speaker in browser and node.<br/>
-> [node-speaker](http://npmjs.org/package/speaker), [alsa](http://npmjs.org/package/alsa) — output pcm stream to speaker in node.<br/>
-> [baudio](http://npmjs.org/package/baudio), [webaudio](http://npmjs.org/package/webaudio) — alternative audio generators based on function.
+> [audio-through](http://npmjs.org/package/audio-through) — universal audio processing stream.<br/>
+> [audio-speaker](http://npmjs.org/package/audio-speaker) — output audio stream to speaker, both in node/browser.<br/>
+> [baudio](http://npmjs.org/package/baudio), [webaudio](http://npmjs.org/package/webaudio) — alternative audio generators.
