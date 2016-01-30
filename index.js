@@ -4,7 +4,7 @@
 
 var inherits = require('inherits');
 var fnbody = require('fnbody');
-var AudioThrough = require('../audio-through');
+var AudioThrough = require('audio-through');
 var extend = require('xtend/mutable');
 var util = require('audio-buffer-utils');
 
@@ -66,7 +66,7 @@ Generator.prototype.process = function (chunk) {
 
 	//generate [channeled] samples
 	for (var i = 0; i < chunk.length; i++) {
-		var moment = time + i / self.sampleRate;
+		var moment = time + i / self.outputFormat.sampleRate;
 
 		//end generation, if enough
 		if (moment > self.duration) return null;

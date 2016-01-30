@@ -19,6 +19,7 @@ test('Panned wave', function (done) {
 	generator.pipe(Speaker());
 });
 
+
 test('Left channel noise', function (done) {
 	var generator = Generator({
 		generate: function (time) {
