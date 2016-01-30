@@ -4,7 +4,7 @@
 
 var inherits = require('inherits');
 var fnbody = require('fnbody');
-var AudioThrough = require('audio-through');
+var AudioThrough = require('../audio-through');
 var extend = require('xtend/mutable');
 var util = require('audio-buffer-utils');
 
@@ -18,6 +18,7 @@ function Generator (fn, opts) {
 	var self = this;
 
 	//set generator function
+	if (!opts) opts = {};
 	if (typeof fn === 'function') {
 		opts.generate = fn;
 	}
@@ -27,6 +28,13 @@ function Generator (fn, opts) {
 
 	//create through-instance
 	AudioThrough.call(this, opts);
+
+	//align frequency/period
+	if (self.frequency != null) {
+		self.period = 1 / self.frequency;
+	} else {
+		self.frequency = 1 / self.period;
+	}
 };
 
 
@@ -39,6 +47,10 @@ Generator.prototype.duration = Infinity;
 
 /** Period to wrap time */
 Generator.prototype.period = Infinity;
+
+
+/** Frequency, related to period info */
+Generator.prototype.frequency;
 
 
 /**
@@ -56,20 +68,28 @@ Generator.prototype.process = function (chunk) {
 	for (var i = 0; i < chunk.length; i++) {
 		var moment = time + i / self.sampleRate;
 
+		//end generation, if enough
 		if (moment > self.duration) return null;
 
+		//rotate by period
 		if (self.period !== Infinity) {
 			moment %= self.period;
 		}
 
 		var gen = self.generate(moment);
 
+		//treat null as null
+		if (gen === null) {
+			return null;
+		}
+
+		//wrap number value
 		if (!Array.isArray(gen)) {
-			gen = [gen];
+			gen = [gen || 0];
 		}
 
 		for (var channel = 0; channel < chunk.numberOfChannels; channel++) {
-			data[channel][i] = (gen[channel] == null ? gen[0] : gen[channel]) || 0;
+			data[channel][i] = (gen[channel] == null ? gen[0] : gen[channel]);
 		}
 	}
 };

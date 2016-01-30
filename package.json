@@ -27,6 +27,7 @@
   "homepage": "https://github.com/audio-lab/generator",
   "devDependencies": {
     "audio-gain": "^1.0.1",
+    "audio-sink": "^1.0.2",
     "audio-speaker": "^1.1.2",
     "mocha": "^2.3.3",
     "speaker": "audio-lab/node-speaker"

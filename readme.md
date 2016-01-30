@@ -11,18 +11,22 @@ var Speaker = require('audio-speaker');
 
 Generator(
 	//Generator function, returns sample values -1..1 for channels
-	function (chunk) {
-		var time = index / this.sampleRate;
-
-		return Math.sin(Math.PI * 2 * time * 439);
+	function (time) {
+		return [
+			Math.sin(Math.PI * 2 * time * 439), //channel 1
+			Math.sin(Math.PI * 2 * time * 441), //channel 2
+		]
 	},
 
 	{
-		//Duration of generated stream, in seconds
+		//Duration of generated stream, in seconds, after which stream will end.
 		duration: Infinity,
 
-		//Periodicity of the time
-		period: Infinity
+		//Periodicity of the time.
+		period: Infinity,
+
+		//Alternative to the period, more intuitive to use. Replaces period, if defined.
+		frequency: undefined
 })
 .on('error', function (e) {
 	//error happened during generation the frame
