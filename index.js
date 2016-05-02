@@ -49,7 +49,7 @@ Generator.prototype.duration = Infinity;
 Generator.prototype.period = Infinity;
 
 
-/** Frequency, related to period info */
+/** Frequency, related to period */
 Generator.prototype.frequency;
 
 
@@ -66,7 +66,7 @@ Generator.prototype.process = function (chunk) {
 
 	//generate [channeled] samples
 	for (var i = 0; i < chunk.length; i++) {
-		var moment = time + i / self.outputFormat.sampleRate;
+		var moment = time + i / self.format.sampleRate;
 
 		//end generation, if enough
 		if (moment > self.duration) return null;

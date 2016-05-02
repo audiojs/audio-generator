@@ -4,7 +4,8 @@
   "description": "Generate audio stream based on function",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "node test.js",
+    "test:browser": "budo test.js -d ./test",
     "watch": "watchify -r ./:audio-generator -r audio-gain -r audio-element -r stacktrace-parser -r fnbody -r codemirror -r codemirror/mode/javascript/javascript -r audio-speaker -o ./bundle.js"
   },
   "style": "index.css",
@@ -28,14 +29,15 @@
   "devDependencies": {
     "audio-gain": "^1.0.1",
     "audio-sink": "^1.0.2",
-    "audio-speaker": "^1.1.2",
-    "mocha": "^2.3.3",
-    "speaker": "audio-lab/node-speaker"
+    "audio-speaker": "^1.2.4",
+    "audio-through": "^2.0.2",
+    "speaker": "^0.3.0",
+    "tst": "^1.3.1"
   },
   "dependencies": {
     "audio-buffer-utils": "^2.0.0",
     "audio-element": "^1.0.1",
-    "audio-through": "^1.0.6",
+    "audio-through": "^2.0.1",
     "codemirror": "^5.7.0",
     "fnbody": "latest",
     "inherits": "^2.0.1",

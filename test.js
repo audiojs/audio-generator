@@ -1,9 +1,10 @@
 var Generator = require('./');
-var Speaker = require('speaker');
+var Speaker = require('audio-speaker');
 var assert = require('assert');
 var util = require('audio-buffer-utils');
 var Sink = require('audio-sink');
-var test = it;
+var test = require('tst');
+var Through = require('audio-through');
 
 
 test('Panned wave', function (done) {
@@ -65,6 +66,7 @@ test('Pulse', function (done) {
 	setTimeout(done, 1000)
 });
 
+
 test('setFunction', function (done) {
 	Generator(function (time) {
 		if (time > 0.1) {
@@ -75,7 +77,7 @@ test('setFunction', function (done) {
 		}
 
 		return Math.sin(Math.PI * 2 * time * 440);
-	})
+	}, {duration: 1})
 	.pipe(Speaker());
 
 	setTimeout(done, 300);

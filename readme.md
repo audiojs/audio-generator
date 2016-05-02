@@ -23,10 +23,7 @@ Generator(
 		duration: Infinity,
 
 		//Periodicity of the time.
-		period: Infinity,
-
-		//Alternative to the period, more intuitive to use. Replaces period, if defined.
-		frequency: undefined
+		period: Infinity
 })
 .on('error', function (e) {
 	//error happened during generation the frame
