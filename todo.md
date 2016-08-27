@@ -1,3 +1,3 @@
-* replace audio-lab/audio-speaker with node-speaker
+* replace audiojs/audio-speaker with node-speaker
 * GUI (audio-element)
 * CLI
