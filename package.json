@@ -37,7 +37,7 @@
   "dependencies": {
     "audio-buffer-utils": "^3.1.2",
     "audio-element": "^1.0.1",
-    "audio-through": "^2.0.1",
+    "audio-through": "^2.1.5",
     "codemirror": "^5.7.0",
     "fnbody": "latest",
     "inherits": "^2.0.1",
