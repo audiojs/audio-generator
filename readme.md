@@ -1,3 +1,5 @@
+# audio-generator [![Build Status](https://travis-ci.org/audiojs/audio-generator.svg?branch=master)](https://travis-ci.org/audiojs/audio-generator) [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
+
 Generate audio stream with a function.
 
 ## Usage

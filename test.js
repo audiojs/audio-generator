@@ -1,3 +1,5 @@
+'use strict';
+
 var Generator = require('./');
 var Speaker = require('audio-speaker');
 var assert = require('assert');

@@ -1,6 +1,7 @@
 /**
  * @module  audio-generator
  */
+'use strict';
 
 var inherits = require('inherits');
 var fnbody = require('fnbody');
