@@ -31,7 +31,6 @@
     "audio-sink": "^1.0.2",
     "audio-speaker": "^1.2.4",
     "audio-through": "^2.0.2",
-    "speaker": "^0.3.0",
     "tst": "^1.3.1"
   },
   "dependencies": {
