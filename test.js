@@ -1,6 +1,6 @@
 'use strict';
 
-var Generator = require('./');
+var Generator = require('./stream');
 var Speaker = require('audio-speaker');
 var assert = require('assert');
 var util = require('audio-buffer-utils');
@@ -69,7 +69,7 @@ test('Pulse', function (done) {
 });
 
 
-test('setFunction', function (done) {
+test.skip('setFunction', function (done) {
 	Generator(function (time) {
 		if (time > 0.1) {
 			this.period = 1/440;
@@ -88,14 +88,15 @@ test('setFunction', function (done) {
 test('Errors in processing, throw errors', function (done) {
 	Generator(function (time) {
 		if (time > 0.0001) {
-			this.error(123);
+			return new Error(123);
 		}
 		if (time > 0.0002) {
 			return null;
 		}
 	})
 	.on('error', function (e) {
-		console.error(e)
+		assert.equal(e.message, 123);
+		// console.error(e);
 	})
 	.on('end', done)
 	.pipe(Sink());
