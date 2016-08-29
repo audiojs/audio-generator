@@ -1,6 +1,7 @@
 /**
  * @module  audio-generator
  */
+'use strict';
 
 var extend = require('xtend/mutable');
 var util = require('audio-buffer-utils');
