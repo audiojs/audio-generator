@@ -3,10 +3,10 @@
 var Generator = require('./stream');
 var Speaker = require('audio-speaker');
 var assert = require('assert');
-var util = require('audio-buffer-utils');
 var Sink = require('audio-sink');
 var test = require('tst');
-var Through = require('audio-through');
+// var Through = require('audio-through');
+// var util = require('audio-buffer-utils');
 
 
 test('Panned wave', function (done) {

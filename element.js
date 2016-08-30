@@ -11,13 +11,14 @@
  *
  * @module audio-generator/element
  */
+'use strict';
 
 var Generator = require('audio-generator');
 var parseStack = require('stacktrace-parser').parse;
 var AudioElement = require('audio-element');
 var fnbody = require('fnbody');
 var CodeMirror = require('codemirror');
-var cmMode = require('codemirror/mode/javascript/javascript');
+// var cmMode = require('codemirror/mode/javascript/javascript');
 
 
 var GenProto = Object.create(AudioElement.prototype);
