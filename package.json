@@ -4,7 +4,7 @@
   "description": "Generate audio stream based on function",
   "main": "./stream.js",
   "scripts": {
-    "prepublish": "npm run lint && npm run test",
+    "preversion": "npm run lint && npm run test",
     "lint": "eslint *.js",
     "test": "node test.js",
     "test:browser": "budo test.js -d ./test",
