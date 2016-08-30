@@ -88,7 +88,7 @@ test.skip('setFunction', function (done) {
 test('Errors in processing, throw errors', function (done) {
 	Generator(function (time) {
 		if (time > 0.0001) {
-			return new Error(123);
+			throw Error(123);
 		}
 		if (time > 0.0002) {
 			return null;

@@ -74,7 +74,7 @@ function Generator (fn, opts) {
 			var gen = opts.generate(moment);
 
 			//treat null as end
-			if (gen === null || gen instanceof Error) {
+			if (gen === null) {
 				return gen;
 			}
 
