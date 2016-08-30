@@ -5,7 +5,7 @@
   "main": "./stream.js",
   "scripts": {
     "preversion": "npm run lint && npm run test",
-    "lint": "eslint *.js",
+    "lint": "eslint *.js --ignore-pattern test.js",
     "test": "node test.js",
     "test:browser": "budo test.js -d ./test",
     "watch": "watchify -r ./:audio-generator -r audio-gain -r audio-element -r stacktrace-parser -r fnbody -r codemirror -r codemirror/mode/javascript/javascript -r audio-speaker -o ./bundle.js"
