@@ -1,0 +1,31 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "commonjs": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "no-cond-assign": 0,
+        "no-constant-condition": 0,
+        "indent": 0,
+        "linebreak-style": 0,
+        "quotes": 0,
+        "semi": 0,
+        "no-control-regex": 0,
+        "no-duplicate-case": 0,
+        "no-empty": 0,
+        "no-ex-assign": 0,
+        "no-extra-boolean-cast": 0,
+        "no-extra-semi": 0,
+        "no-fallthrough": 0,
+        "no-func-assign": 0,
+        "no-inner-declarations": 0,
+        "no-irregular-whitespace": 0,
+        "no-mixed-spaces-and-tabs": 0,
+        "no-redeclare": 0,
+        "no-unused-vars": 0,
+        "no-sparse-arrays": 0
+    }
+}
