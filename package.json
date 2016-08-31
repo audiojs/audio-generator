@@ -1,6 +1,6 @@
 {
   "name": "audio-generator",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Generate audio stream based on function",
   "main": "./stream.js",
   "scripts": {
@@ -15,7 +15,12 @@
     "type": "git",
     "url": "https://github.com/audiojs/audio-generator"
   },
-  "files": [ "index.js", "stream.js", "element.js", "pull.js"  ],
+  "files": [
+    "index.js",
+    "stream.js",
+    "element.js",
+    "pull.js"
+  ],
   "keywords": [
     "audio",
     "pcm",
