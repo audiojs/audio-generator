@@ -5,6 +5,7 @@
 
 var extend = require('xtend/mutable');
 var util = require('audio-buffer-utils');
+var pcm = require('pcm-util');
 
 
 module.exports = Generator;
@@ -25,15 +26,13 @@ function Generator (fn, opts) {
 
 	//sort out arguments
 	opts = extend({
-		sampleRate: 44100,
-
 		//total duration of a stream
 		duration: Infinity,
 
 		//time repeat period, in seconds, or 1/frequency
 		period: Infinity,
 
-		//detected from period
+		//inferred from period
 		//frequency: 0,
 
 		/**
@@ -43,7 +42,7 @@ function Generator (fn, opts) {
 		 * @param {number} time current time
 		 */
 		generate: Math.random
-	}, opts);
+	}, pcm.defaults, opts);
 
 	//align frequency/period
 	if (opts.frequency != null) {
@@ -54,8 +53,15 @@ function Generator (fn, opts) {
 
 	let time = 0, count = 0;
 
-	//return sync map
-	return function (buffer) {
+	//wrapper for convenience, there is nothing to end
+	generate.end = function () {};
+
+	return generate;
+
+	//return sync source/map
+	function generate (buffer) {
+		if (!buffer) buffer = util.create(opts.channels, opts.samplesPerFrame, opts.sampleRate);
+
 		//get audio buffer channels data in array
 		var data = util.data(buffer);
 
