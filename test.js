@@ -5,6 +5,8 @@ var Speaker = require('audio-speaker');
 var assert = require('assert');
 var Sink = require('audio-sink');
 var test = require('tst');
+var Source = require('./pull');
+var pull = require('pull-stream');
 // var Through = require('audio-through');
 // var util = require('audio-buffer-utils');
 
@@ -100,4 +102,28 @@ test('Errors in processing, throw errors', function (done) {
 	})
 	.on('end', done)
 	.pipe(Sink());
+});
+
+
+test('Pull-stream', function (done) {
+	let src = Source(Math.random);
+	let count = 0;
+
+	pull(
+		src,
+		pull.asyncMap((buf, cb) => {
+			if (++count >= 5) {
+				return src.abort();
+			}
+			setTimeout(() => {
+				cb(null, buf);
+			}, 10);
+		}),
+		pull.drain()
+	);
+
+	setTimeout(() => {
+		assert.equal(count, 5);
+		done();
+	}, 200);
 });
