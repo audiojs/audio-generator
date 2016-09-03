@@ -15,12 +15,6 @@
     "type": "git",
     "url": "https://github.com/audiojs/audio-generator"
   },
-  "files": [
-    "index.js",
-    "stream.js",
-    "element.js",
-    "pull.js"
-  ],
   "keywords": [
     "audio",
     "pcm",
