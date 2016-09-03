@@ -100,7 +100,7 @@ function Generator (fn, opts) {
 		time = count / opts.sampleRate;
 
 		return buffer;
-	};
+	}
 }
 
 
