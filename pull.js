@@ -12,7 +12,7 @@ module.exports = function Stream (fn, opts) {
 	let stream = (end, cb) => {
 		if (end || ended) {
 			ended = true;
-			return cb && cb(end);
+			return cb && cb(true);
 		}
 
 		return cb(null, generate());
