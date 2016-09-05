@@ -53,9 +53,6 @@ function Generator (fn, opts) {
 
 	let time = 0, count = 0;
 
-	//wrapper for convenience, there is nothing to end
-	generate.end = function () {};
-
 	return generate;
 
 	//return sync source/map
@@ -65,12 +62,12 @@ function Generator (fn, opts) {
 		//get audio buffer channels data in array
 		var data = util.data(buffer);
 
+		//enough?
+		if (time + buffer.length / opts.sampleRate > opts.duration) return null;
+
 		//generate [channeled] samples
 		for (var i = 0; i < buffer.length; i++) {
 			var moment = time + i / opts.sampleRate;
-
-			//end generation, if enough
-			if (moment > opts.duration) return null;
 
 			//rotate by period
 			if (opts.period !== Infinity) {
