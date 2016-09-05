@@ -17,7 +17,12 @@ module.exports = Generator;
  */
 function Generator (fn, opts) {
 	if (fn instanceof Function) {
-		opts = opts || {};
+		if (typeof opts === 'number') {
+			opts = {duration: opts};
+		}
+		else {
+			opts = opts || {};
+		}
 		opts.generate = fn;
 	}
 	else {
