@@ -6,10 +6,43 @@ Generate audio stream with a function.
 
 [![npm install audio-generator](https://nodei.co/npm/audio-generator.png?mini=true)](https://npmjs.org/package/audio-generator/)
 
+#### Direct
 
 ```js
-var Generator = require('audio-generator');
-var Speaker = require('audio-speaker');
+const generator = require('audio-generator');
+const speaker = require('audio-speaker');
+
+// panned sine generator
+let generate = generator(time => [
+		Math.sin(Math.PI * 2 * time * 439), //channel 1
+		Math.sin(Math.PI * 2 * time * 441), //channel 2
+	], { duration: 2 });
+let write = speaker();
+
+// hook up generator → speaker loop
+(function loop () {
+	write(generate(), loop);
+})();
+```
+
+#### Pull stream
+
+```js
+var generator = require('audio-generator/pull');
+var speaker = require('audio-speaker/pull');
+var pull = require('pull-stream/pull');
+
+pull(
+	generator(Math.random, { duration: 2 }),
+	speaker()
+);
+```
+
+#### Node stream
+
+```js
+var Generator = require('audio-generator/stream');
+var Speaker = require('audio-speaker/stream');
 
 Generator(
 	//Generator function, returns sample values -1..1 for channels
@@ -29,9 +62,6 @@ Generator(
 })
 .on('error', function (e) {
 	//error happened during generation the frame
-})
-.setFunction(function (time, n) {
-	return [Math.random(), Math.random()];
 })
 .pipe(Speaker());
 ```
