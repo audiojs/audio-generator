@@ -18,6 +18,7 @@ module.exports = function Stream (fn, opts) {
 		return cb(null, generate());
 	}
 
+	//FIXME: this is apparently bad, we gotta manually make call with end set to true
 	stream.abort = () => {ended = true}
 
 	return stream;
