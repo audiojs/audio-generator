@@ -33,7 +33,7 @@
     "audio-sink": "^1.0.2",
     "audio-speaker": "^1.2.4",
     "audio-through": "^2.0.2",
-    "pull-stream": "^3.4.4",
+    "pull-stream": "^3.5.0",
     "eslint": "^3.4.0",
     "audio-element": "^1.0.1",
     "codemirror": "^5.7.0",
