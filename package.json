@@ -1,6 +1,6 @@
 {
   "name": "audio-generator",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Generate audio stream based on function",
   "main": "./stream.js",
   "scripts": {
