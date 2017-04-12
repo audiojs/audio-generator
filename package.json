@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/audiojs/audio-generator",
   "devDependencies": {
-    "audio-gain": "^1.0.1",
+    "audio-gain": "^1.1.2",
     "audio-sink": "^1.0.2",
     "audio-speaker": "^1.2.4",
     "audio-through": "^2.0.2",
