@@ -1,5 +1,7 @@
 # audio-generator [![Build Status](https://travis-ci.org/audiojs/audio-generator.svg?branch=master)](https://travis-ci.org/audiojs/audio-generator) [![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/audiojs/audio-generator.svg)](https://greenkeeper.io/)
+
 Generate audio stream with a function.
 
 ## Usage
