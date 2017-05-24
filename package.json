@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "audio-buffer": "^3.0.0",
-    "audio-buffer-utils": "^4.0.0",
+    "audio-buffer-utils": "^5.0.0",
     "audio-through": "^2.0.1",
     "inherits": "^2.0.1",
     "pcm-util": "^2.0.3",
