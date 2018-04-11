@@ -10,7 +10,7 @@ Generate audio stream with a function.
 
 ```js
 const generator = require('audio-generator/direct');
-const speaker = require('audio-speaker');
+const speaker = require('audio-speaker/direct');
 
 // panned sine generator
 let generate = generator(time => [
