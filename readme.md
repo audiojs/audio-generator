@@ -9,7 +9,7 @@ Generate audio stream with a function.
 #### Direct
 
 ```js
-const generator = require('audio-generator');
+const generator = require('audio-generator/index');
 const speaker = require('audio-speaker');
 
 // panned sine generator
